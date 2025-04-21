@@ -1,0 +1,1162 @@
+if not game:IsLoaded() then
+	game.Loaded:Wait()
+end
+
+if game.PlaceId == 7711635737 then
+	game.StarterGui:SetCore("SendNotification", {
+		Title = "Please wait",
+		Text = "Its loading.",
+	})
+	local HttpService = game:GetService("HttpService")
+	local function setup()
+		local VirtualInputManager = game:GetService("VirtualInputManager")
+		local MacLib = loadstring(game:HttpGet("https://github.com/biggaboy212/Maclib/releases/latest/download/maclib.txt"))()
+		local ArrestRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["d826b47c-2853-4585-b67f-804febe691ac"]
+		local EquipRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["839b6897-d63d-4e5e-811c-9f770a56c2d0"]
+		local wantedRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["731e1826-fa12-4818-8787-356435fe206d"]
+		local robRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["d826b47c-2853-4585-b67f-804febe691ac"]
+		local shootRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["37dc945e-7f47-4c09-ae80-3fa9ebd707bd"]
+		local buyRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["75035ee2-fad1-49b7-b925-25f8357fa568"]
+		local sellRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["a6dfecd7-880d-4aca-99f6-5d2694189ead"]
+		local placeBombRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["a926caf2-002f-4838-86ec-91ac79cd4401"]
+		local fireBombRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["6d062559-ad3b-4525-a7e5-e7b728eaa7f1"]
+		local radarRemoteEvent = game:GetService("ReplicatedStorage")["3ZJ"]["0590fa6a-adc6-4497-9098-e146bb954efc"]
+		local key = Enum.KeyCode.E
+		local ProximityPromptTimeBet = 2.5--[[
+		local Window = MacLib:Window({
+			Title = "Kanistay | .gg/kanistay",
+			Subtitle = "AutoRob | Made for V 3.8.2",
+			Size = UDim2.fromOffset(700, 500),
+			DragStyle = 2,
+			DisabledWindowControls = {"Exit"},
+			ShowUserInfo = false,
+			Keybind = Enum.KeyCode.RightShift,
+			AcrylicBlur = false,
+		})]]
+		
+		local autorobToggle = true
+		local disable3d = false
+		local antiafk = true
+		local autoServerHop = true
+		game:GetService("RunService"):Set3dRenderingEnabled(not disable3d)
+		local autoSellToggle = true
+		
+
+		game.Players.LocalPlayer.Idled:Connect(function()
+			if antiafk then
+				VirtualInputManager:CaptureController()
+				VirtualInputManager:ClickButton2(Vector2.new())
+				
+			end
+		end)
+
+		
+
+		local TweenService = game:GetService("TweenService")
+		local ReplicatedStorage = game:GetService("ReplicatedStorage")
+		local Workspace = game:GetService("Workspace")
+		local player = game.Players.LocalPlayer
+		local character = player.Character or player.CharacterAdded:Wait()
+		local camera = game.Workspace.CurrentCamera
+                
+		local player = game.Players.LocalPlayer
+		local character = player.Character or player.CharacterAdded:Wait()
+
+		local part = Instance.new("Part")
+		part.Parent = game.Workspace
+		part.Position = Vector3.new(-1950, 373, 3500)
+		part.Size = Vector3.new(2, 2, 2)
+		part.Anchored = true
+		part.Transparency = 0.5
+		part.CanCollide = false
+
+
+		local part2 = Instance.new("Part")
+		part2.Parent = game.Workspace
+		part2.Position = Vector3.new(1515, 200, 2223)
+		part2.Size = Vector3.new(15, 1, 15)
+		part2.Anchored = true
+		part2.Transparency = 0.5
+		part2.CanCollide = true
+		local plrGui = player.PlayerGui
+		local VirtualInputManager = game:GetService("VirtualInputManager")
+		local function updateCamera()
+			if not character or not character:FindFirstChild("HumanoidRootPart") then
+				return
+			end
+
+			local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+			local cameraPosition = humanoidRootPart.Position - humanoidRootPart.CFrame.LookVector * 10 + Vector3.new(0, 5, 0)
+
+			camera.CFrame = CFrame.new(cameraPosition, humanoidRootPart.Position)
+		end
+		
+		local function teleportTo(destination, lookAt)
+			local plr = game.Players.LocalPlayer
+			local car = Workspace.Vehicles[plr.Name]
+			car:SetAttribute("ParkingBrake", true)
+			car:SetAttribute("Locked", true)
+			car.PrimaryPart = car:FindFirstChild("DriveSeat",true)
+			car.DriveSeat:Sit(plr.Character.Humanoid)
+			if lookAt then
+				car:SetPrimaryPartCFrame(CFrame.new(destination, lookAt))
+			else
+				car:SetPrimaryPartCFrame(CFrame.new(destination))
+			end
+			print("The vehicle has teleported to:", destination)
+		end
+		local function tweenTo(destination)
+			local plr = game.Players.LocalPlayer
+			local car = Workspace.Vehicles[plr.Name]
+			car:SetAttribute("ParkingBrake", true)
+			car:SetAttribute("Locked", true)
+			car.PrimaryPart = car:FindFirstChild("DriveSeat",true)
+			car.DriveSeat:Sit(plr.Character.Humanoid)
+
+			local distance = (car.PrimaryPart.Position - destination).Magnitude
+			local tweenDuration = distance / 175
+
+			local TweenInfoToUse = TweenInfo.new(
+				tweenDuration,
+				Enum.EasingStyle.Linear,
+				Enum.EasingDirection.Out
+			)
+
+			local TweenValue = Instance.new("CFrameValue")
+			TweenValue.Value = car:GetPivot()
+
+			TweenValue.Changed:Connect(function(newCFrame)
+				car:PivotTo(newCFrame)
+				car.DriveSeat.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+				car.DriveSeat.AssemblyAngularVelocity = Vector3.new(0, 0, 0)
+			end)
+
+			local targetCFrame = CFrame.new(destination)
+			local tween = TweenService:Create(TweenValue, TweenInfoToUse, { Value = targetCFrame })
+
+			tween:Play()
+
+			tween.Completed:Wait()
+			car:SetAttribute("ParkingBrake", true)
+			car:SetAttribute("Locked", true)
+			print("The vehicle has reached position :", destination)
+			TweenValue:Destroy()
+			return
+		end
+
+		local function resetCameraOnDeath()
+			local humanoid = character:WaitForChild("Humanoid")
+			humanoid.Died:Connect(function()
+				print("The player is dead. Camera reset...")
+
+				player.CharacterAdded:Wait()
+				character = player.Character or player.CharacterAdded:Wait()
+
+				task.wait(0.1) 
+
+				tweenTo(part.Position)
+				local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+				if humanoidRootPart then
+					local cameraPosition = humanoidRootPart.Position - humanoidRootPart.CFrame.LookVector * 10 + Vector3.new(0, 5, 0)
+					camera.CFrame = CFrame.new(cameraPosition, humanoidRootPart.Position)
+				end
+			end)
+		end
+
+		local function plrTween(destination)
+			local plr = game.Players.LocalPlayer
+			local char = plr.Character
+
+			local distance = (char.PrimaryPart.Position - destination).Magnitude
+			local tweenDuration = distance / 20
+
+			local TweenInfoToUse = TweenInfo.new(
+				tweenDuration,
+				Enum.EasingStyle.Linear,
+				Enum.EasingDirection.Out
+			)
+
+			local TweenValue = Instance.new("CFrameValue")
+			TweenValue.Value = char:GetPivot()
+
+			TweenValue.Changed:Connect(function(newCFrame)
+				char:PivotTo(newCFrame)
+			end)
+
+			local targetCFrame = CFrame.new(destination)
+			local tween = TweenService:Create(TweenValue, TweenInfoToUse, { Value = targetCFrame })
+
+			tween:Play()
+
+			tween.Completed:Wait()
+			print("The character has reached the position :", destination)
+			TweenValue:Destroy()
+		end
+
+		local function interactWithVisibleMeshParts(folder)
+			if not folder then return end
+
+			local player = game.Players.LocalPlayer
+			local policeTeam = game:GetService("Teams"):FindFirstChild("Police")
+			if not policeTeam then return end
+
+			local function isPoliceNearby()
+				for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
+					if plr.Team == policeTeam and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+						local distance = (plr.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+						if distance <= 40 then
+							return true
+						end
+					end
+				end
+				return false
+			end
+
+			local meshParts = {}
+			for _, meshPart in ipairs(folder:GetChildren()) do
+				if meshPart:IsA("MeshPart") and meshPart.Transparency == 0 then
+					table.insert(meshParts, meshPart)
+				end
+			end
+
+			table.sort(meshParts, function(a, b)
+				local aDist = (a.Position - player.Character.HumanoidRootPart.Position).Magnitude
+				local bDist = (b.Position - player.Character.HumanoidRootPart.Position).Magnitude
+				return aDist < bDist
+			end)
+
+			for i, meshPart in ipairs(meshParts) do
+				if isPoliceNearby() then
+					print("Police are nearby, aborting interaction")
+					game.StarterGui:SetCore("SendNotification", {
+						Title = "Police is nearby",
+						Text = "Interaction aborted",
+					})
+					return
+				end
+
+				if player.Character.Humanoid.Health <= 50 then
+					print("Player is hurt, aborting interaction")
+					game.StarterGui:SetCore("SendNotification", {
+						Title = "Player is hurt",
+						Text = "Interaction aborted",
+					})
+					return
+				end
+
+				if meshPart.Transparency == 1 then
+					return
+				end
+				if meshPart.Parent.Name == "Money" then
+					local args3 = {
+						[1] = meshPart,
+						[2] = "a64",
+						[3] = true,
+					}
+
+					robRemoteEvent:FireServer(unpack(args3))
+					print("fired first a64")
+					task.wait(ProximityPromptTimeBet)
+					local args3 = {
+						[1] = meshPart,
+						[2] = "a64",
+						[3] = false,
+					}
+
+					robRemoteEvent:FireServer(unpack(args3))
+					print("fired second a64")
+				else
+					local args4 = {
+						[1] = meshPart,
+						[2] = "lgJ",
+						[3] = true
+					}
+
+					robRemoteEvent:FireServer(unpack(args4))
+					print("fired first lgJ")
+					task.wait(ProximityPromptTimeBet)
+					local args4 = {
+						[1] = meshPart,
+						[2] = "lgJ",
+						[3] = false
+					}
+
+					robRemoteEvent:FireServer(unpack(args4))
+					print("fired second lgJ")
+				end
+				--[[
+				VirtualInputManager:SendKeyEvent(true, key, false, game)
+				wait(ProximityPromptTimeBet)
+				VirtualInputManager:SendKeyEvent(false, key, false, game)]]
+				task.wait(0.1)
+			end
+
+		end
+
+		local HttpService = game:GetService('HttpService')
+		local TeleportService = game:GetService('TeleportService')
+		local PlaceID = game.PlaceId 
+		local AllIDs = {}
+		local foundAnything = ""
+		local actualHour = os.time() 
+
+		local File = pcall(function()
+			AllIDs = HttpService:JSONDecode(readfile("NotSameServersAutoRob.json"))
+		end)
+		if not File then
+			AllIDs = {actualHour} 
+			writefile("NotSameServersAutoRob.json", HttpService:JSONEncode(AllIDs))
+		end
+
+		local function TPReturner()
+			local Site
+			if foundAnything == "" then
+				Site = HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+			else
+				Site = HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+			end
+
+			if Site.nextPageCursor then
+				foundAnything = Site.nextPageCursor
+			end
+
+			for _, v in pairs(Site.data) do
+				if tonumber(v.maxPlayers) > tonumber(v.playing) then
+					local ServerID = tostring(v.id)
+					local AlreadyVisited = false
+
+					for _, ExistingID in ipairs(AllIDs) do
+						if ServerID == ExistingID then
+							AlreadyVisited = true
+							break
+						end
+					end
+					if not AlreadyVisited then
+						table.insert(AllIDs, ServerID)
+						pcall(function()
+							writefile("NotSameServersAutoRob.json", HttpService:JSONEncode(AllIDs))
+							TeleportService:TeleportToPlaceInstance(PlaceID, ServerID, game.Players.LocalPlayer)
+						end)
+						wait(4)
+						return 
+					end
+				end
+			end
+		end
+
+		local function Teleport(Manuel)
+			
+			if Manuel == true or autoServerHop == true then
+				pcall(function()
+					TPReturner()
+					if foundAnything ~= "" then
+						TPReturner()
+					end
+				end)
+			end
+		end
+
+		local function interactWithVisibleMeshParts2(folder)
+			if not folder then return end
+			local player = game.Players.LocalPlayer
+			local policeTeam = game:GetService("Teams"):FindFirstChild("Police")
+			if not policeTeam then return end
+
+			local function isPoliceNearby()
+				for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
+					if plr.Team == policeTeam and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+						local distance = (plr.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+						if distance <= 40 then
+							return true
+						end
+					end
+				end
+				return false
+			end
+
+			local meshParts = {}
+			for _, meshPart in ipairs(folder:GetChildren()) do
+				if meshPart:IsA("MeshPart") and meshPart.Transparency == 0 then
+					table.insert(meshParts, meshPart)
+				end
+			end
+
+			table.sort(meshParts, function(a, b)
+				local aDist = (a.Position - player.Character.HumanoidRootPart.Position).Magnitude
+				local bDist = (b.Position - player.Character.HumanoidRootPart.Position).Magnitude
+				return aDist < bDist
+			end)
+
+			for i, meshPart in ipairs(meshParts) do
+				if isPoliceNearby() then
+					print("Police are nearby, aborting interaction")
+					game.StarterGui:SetCore("SendNotification", {
+						Title = "Police is nearby",
+						Text = "Interaction aborted",
+					})
+					return
+				end
+
+				if player.Character.Humanoid.Health <= 50 then
+					print("Player is hurt, aborting interaction")
+					game.StarterGui:SetCore("SendNotification", {
+						Title = "Player is hurt",
+						Text = "Interaction aborted",
+					})
+					return
+				end
+
+				if meshPart.Transparency == 1 then
+					return
+				end
+
+				plrTween(meshPart.Position)
+				if meshPart.Parent.Name == "Money" then
+					local args3 = {
+						[1] = meshPart,
+						[2] = "a64",
+						[3] = true,
+					}
+
+					robRemoteEvent:FireServer(unpack(args3))
+					print("fired first a64")
+					task.wait(ProximityPromptTimeBet)
+					local args3 = {
+						[1] = meshPart,
+						[2] = "a64",
+						[3] = false,
+					}
+
+					robRemoteEvent:FireServer(unpack(args3))
+					print("fired second a64")
+				else
+					local args4 = {
+						[1] = meshPart,
+						[2] = "lgJ",
+						[3] = true
+					}
+
+					robRemoteEvent:FireServer(unpack(args4))
+					print("fired first lgJ")
+					task.wait(ProximityPromptTimeBet)
+					local args4 = {
+						[1] = meshPart,
+						[2] = "lgJ",
+						[3] = false
+					}
+
+					robRemoteEvent:FireServer(unpack(args4))
+					print("fired second lgJ")
+				end
+				--[[
+				VirtualInputManager:SendKeyEvent(true, key, false, game)
+				wait(ProximityPromptTimeBet)
+				VirtualInputManager:SendKeyEvent(false, key, false, game)]]
+				task.wait(0.1)
+			end
+		end
+
+		local function tweenToDealer()
+			local function clickAtCoordinates(scaleX, scaleY, duration)
+				local camera = game.Workspace.CurrentCamera
+				local screenWidth = camera.ViewportSize.X
+				local screenHeight = camera.ViewportSize.Y
+			
+				local absoluteX = screenWidth * scaleX
+				local absoluteY = screenHeight * scaleY
+			
+				VirtualInputManager:SendMouseButtonEvent(absoluteX, absoluteY, 0, true, game, 0)  
+				print("Simulated click at : ", absoluteX, absoluteY)
+				
+				if duration and duration > 0 then
+					task.wait(duration)  
+				end
+				
+				VirtualInputManager:SendMouseButtonEvent(absoluteX, absoluteY, 0, false, game, 0) 
+				print("Click released at : ", absoluteX, absoluteY)
+			end
+			clickAtCoordinates(0.5, 0.9)
+			local plr = game.Players.LocalPlayer
+			local car = Workspace.Vehicles:FindFirstChild(plr.Name)
+			if not car then
+				task.wait(60)
+				return tweenToDealer()
+			end
+			if plr.Character.Humanoid.Health <= 50 then
+				game.StarterGui:SetCore("SendNotification", {
+					Title = "Low player health",
+					Text = "Wait",
+				})
+				task.wait(15)
+				return
+			end
+
+			local musikPos = Vector3.new(-1780.224853515625, 10.998990058898926, 3012.48876953125)
+			local safePos = part.Position
+
+
+			local musikStand = Vector3.new(-1744.177001953125, 11.125, 3012.20263671875)
+			local musikSafe = Vector3.new(-1743.2222900390625, 11, 3032.874267578125)
+
+			local dealer = Workspace.Dealers:FindFirstChild("Dealer")
+			local function nodealer()
+				local plr = game.Players.LocalPlayer
+				local car = Workspace.Vehicles[plr.Name]
+				local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+				tweenTo(currentPos)
+				tweenTo(safePos)
+				game.StarterGui:SetCore("SendNotification", {
+					Title = "No dealer",
+					Text = "Leave or wait until one spawn",
+				})
+				Teleport()
+				tweenTo(safePos)
+				Teleport()
+				task.wait(60)
+				return tweenToDealer()
+			end
+			if not dealer then
+				nodealer()
+			end
+			local baseHead
+			if dealer:FindFirstChild("Head") then
+				baseHead = dealer.Head
+			else
+				Teleport()
+				return
+			end
+			local basePos = baseHead.Position
+
+			local pos = basePos + Vector3.new(0, 200, 0)
+
+			local hasBomb = false
+			clickAtCoordinates(0.5, 0.9)
+
+			for _, descendant in ipairs(plrGui:GetDescendants()) do
+				if descendant:IsA("Tool") and descendant.Name == "Bomb" then
+					hasBomb = true; print("has bomb")
+					break
+				end
+			end
+
+			if not hasBomb then
+				clickAtCoordinates(0.5, 0.9)
+				local plr = game.Players.LocalPlayer
+				local car = Workspace.Vehicles[plr.Name]
+				local currentPos = car.Body.Mass.Position + Vector3.new(0,400,0)
+				tweenTo(currentPos)
+				tweenTo(pos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				task.wait(.5)
+				local args = {
+					[1] = "Bomb",
+					[2] = "Dealer"
+				}
+				buyRemoteEvent:FireServer(unpack(args))
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+			end
+
+			local hasGold = false
+			for _, descendant in ipairs(plrGui:GetDescendants()) do
+				if descendant:IsA("Tool") and descendant.Name == "Gold" then
+					hasGold = true
+					break
+				end
+			end
+
+			if hasGold then
+				if autoSellToggle == true then
+					clickAtCoordinates(0.5, 0.9)
+					local plr = game.Players.LocalPlayer
+					local car = Workspace.Vehicles[plr.Name]
+					local currentPos = car.Body.Mass.Position + Vector3.new(0,400,0)
+					tweenTo(currentPos)
+					tweenTo(pos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					task.wait(.5)
+					local args = {
+						[1] = "Gold",
+						[2] = "Dealer"
+					}
+
+					sellRemoteEvent:FireServer(unpack(args))
+					local ohString1 = "Machete"
+					local ohString2 = "Dealer"
+					sellRemoteEvent:FireServer(ohString1, ohString2)
+					local ohString1 = "Glock 17"
+					local ohString2 = "Dealer"
+					sellRemoteEvent:FireServer(ohString1, ohString2)
+					local ohString1 = "MP5"
+					local ohString2 = "Dealer"
+					sellRemoteEvent:FireServer(ohString1, ohString2)
+					local ohString1 = "M58B Shotgun"
+					local ohString2 = "Dealer"
+					sellRemoteEvent:FireServer(ohString1, ohString2)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+				end
+			end
+			local plr = game.Players.LocalPlayer
+			local car = Workspace.Vehicles[plr.Name]
+			local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+			tweenTo(currentPos)
+			tweenTo(safePos)
+			clickAtCoordinates(0.5, 0.9)
+			local dealer = Workspace.Dealers:FindFirstChild("Dealer")
+			local baseHead
+			if dealer:FindFirstChild("Head") then
+				baseHead = dealer.Head
+			else
+				Teleport()
+				return
+			end
+			local basePos = baseHead.Position
+			local pos = basePos + Vector3.new(0, 200, 0)
+			local musikPart = Workspace.Robberies.SafeRobbery.Safe.Door.Accessory.Black
+			local bankPart = Workspace.Robberies.BankRobbery.VaultDoor["Meshes/Tresor_Plane (2)"]
+			local bankLight = game.Workspace.Robberies.BankRobbery.LightGreen.Light
+			local bankLight2 = game.Workspace.Robberies.BankRobbery.LightRed.Light
+			print("Vor 1")
+			if musikPart.Rotation == Vector3.new(180, 0, 180) then
+				clickAtCoordinates(0.5, 0.9)
+				print("Startet 1")
+				game.StarterGui:SetCore("SendNotification", {
+					Title = "Safe is open",
+					Text = "Going to rob",
+				})
+				local dealer2 = Workspace.Dealers:FindFirstChild("Dealer") or dealer
+				local function nodealer()
+					local plr = game.Players.LocalPlayer
+					local car = Workspace.Vehicles[plr.Name]
+					local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+					tweenTo(currentPos)
+					tweenTo(safePos)
+					game.StarterGui:SetCore("SendNotification", {
+						Title = "No dealer",
+						Text = "Leave or wait until one spawn",
+					})
+					Teleport()
+					tweenTo(safePos)
+					Teleport()
+					task.wait(60)
+					return tweenToDealer()
+				end
+				if not dealer2 then
+					nodealer()
+				end
+				local baseHead
+				if dealer2:FindFirstChild("Head") then
+					baseHead = dealer2.Head
+				else
+					Teleport()
+					return
+				end
+				local basePos = baseHead.Position
+				local pos = basePos + Vector3.new(0, 200, 0)
+				tweenTo(musikPos)
+				tweenTo(musikPos)
+				clickAtCoordinates(0.5, 0.9)
+				local function isPoliceNearby()
+					local policeTeam = game:GetService("Teams"):FindFirstChild("Police")
+					for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
+						if plr.Team == policeTeam and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+							local distance = (plr.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+							if distance <= 40 then
+								return true
+							end
+						end
+					end
+					return false
+				end
+				if not isPoliceNearby() then
+					plr.Character.Humanoid.Jump = true
+					plrTween(musikStand)
+		
+					local args = {
+						[1] = "Bomb"
+					}
+					
+					if player.Character.Humanoid.Health <= 50 then
+						print("Player is hurt, aborting interaction")
+						game.StarterGui:SetCore("SendNotification", {
+							Title = "Player is hurt",
+							Text = "Interaction aborted",
+						})
+						return
+					end
+					EquipRemoteEvent:FireServer(unpack(args))
+					task.wait(0.5)
+
+					local tool = plr.Character:FindFirstChild("Bomb")
+					if tool then
+						local args = { tool }
+						placeBombRemoteEvent:FireServer(unpack(args))
+					else
+						warn("Tool 'Bomb' not found in the Backpack!")
+					end
+
+					fireBombRemoteEvent:FireServer()
+					plrTween(musikSafe)
+					task.wait(2.5)
+					plrTween(musikStand)
+					clickAtCoordinates(0.5, 0.9)
+
+					local safeFolder = Workspace.Robberies.SafeRobbery.Safe
+					interactWithVisibleMeshParts(safeFolder:FindFirstChild("Items"))
+					interactWithVisibleMeshParts(safeFolder:FindFirstChild("Items"))
+					interactWithVisibleMeshParts(safeFolder:FindFirstChild("Money"))
+					interactWithVisibleMeshParts(safeFolder:FindFirstChild("Money"))
+					if autoSellToggle == true then
+						local plr = game.Players.LocalPlayer
+						local car = Workspace.Vehicles[plr.Name]
+						local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+						tweenTo(currentPos)
+						tweenTo(pos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						task.wait(.5)
+						local args = {
+							[1] = "Gold",
+							[2] = "Dealer"
+						}
+						sellRemoteEvent:FireServer(unpack(args))
+						sellRemoteEvent:FireServer(unpack(args))
+						sellRemoteEvent:FireServer(unpack(args))
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+					end
+				end
+				local plr = game.Players.LocalPlayer
+				local car = Workspace.Vehicles[plr.Name]
+				local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+				tweenTo(currentPos)
+				print("Return1")
+			else
+				print("Startet 2")
+				game.StarterGui:SetCore("SendNotification", {
+					Title = "Safe is not open",
+					Text = "Leave the game or wait until its cooldown reset",
+				})
+				print("Return2")
+			end
+			print("Verlässt 2")
+			if bankLight2.Enabled == false and bankLight.Enabled == true then
+				clickAtCoordinates(0.5, 0.9)
+				print("Startet 3")
+				local dealer3 = Workspace.Dealers:FindFirstChild("Dealer") or dealer
+				local baseHead
+				if dealer3:FindFirstChild("Head") then
+					baseHead = dealer3.Head
+				else
+					Teleport()
+					return
+				end
+				local basePos = baseHead.Position
+				local pos = basePos + Vector3.new(0, 200, 0)
+				game.StarterGui:SetCore("SendNotification", {
+					Title = "Bank is open",
+					Text = "Going to rob",
+				})
+				local hasBomb = false
+
+				for _, descendant in ipairs(plrGui:GetDescendants()) do
+					if descendant:IsA("Tool") and descendant.Name == "Bomb" then
+						hasBomb = true; print("has bomb")
+						break
+					end
+				end
+
+				if not hasBomb then
+					local plr = game.Players.LocalPlayer
+					local car = Workspace.Vehicles[plr.Name]
+					local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+					tweenTo(currentPos)
+					tweenTo(pos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					task.wait(.5)
+					local args = {
+						[1] = "Bomb",
+						[2] = "Dealer"
+					}
+					
+					buyRemoteEvent:FireServer(unpack(args))
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					tweenTo(basePos)
+					local plr = game.Players.LocalPlayer
+					local car = Workspace.Vehicles[plr.Name]
+					local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+					tweenTo(currentPos)
+				end
+				task.wait(1)
+				tweenTo(Vector3.new(-1199.7459716796875, 7.74953556060791, 3155.750732421875))
+				tweenTo(Vector3.new(-1199.7459716796875, 7.74953556060791, 3155.750732421875))
+				task.wait(1)
+				local function isPoliceNearby()
+					local policeTeam = game:GetService("Teams"):FindFirstChild("Police")
+					for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
+						if plr.Team == policeTeam and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+							local distance = (plr.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+							if distance <= 40 then
+								return true
+							end
+						end
+					end
+					return false
+				end
+				if not isPoliceNearby() then
+					plr.Character.Humanoid.Jump = true
+					if bankPart.Transparency == 0 then
+						plrTween(Vector3.new(-1242.367919921875, 7.749999046325684, 3144.705322265625))
+						local args = {
+							[1] = "Bomb"
+						}
+						if player.Character.Humanoid.Health <= 50 then
+							print("Player is hurt, aborting interaction")
+							game.StarterGui:SetCore("SendNotification", {
+								Title = "Player is hurt",
+								Text = "Interaction aborted",
+							})
+							return
+						end
+						EquipRemoteEvent:FireServer(unpack(args))
+						task.wait(0.5)
+
+						local tool = plr.Character:FindFirstChild("Bomb")
+						if tool then
+							local args = { tool }
+							placeBombRemoteEvent:FireServer(unpack(args))
+						else
+							warn("Tool 'Bomb' not found in the Backpack!")
+						end
+
+						fireBombRemoteEvent:FireServer()
+						plrTween(Vector3.new(-1243.755126953125, 7.839597702026367, 3166.544921875))
+						task.wait(2.5)
+					end
+					plrTween(Vector3.new(-1242.367919921875, 7.749999046325684, 3144.705322265625))
+					local safeFolder = Workspace.Robberies.BankRobbery
+					interactWithVisibleMeshParts2(safeFolder:FindFirstChild("Gold"))
+					interactWithVisibleMeshParts2(safeFolder:FindFirstChild("Gold"))
+					interactWithVisibleMeshParts2(safeFolder:FindFirstChild("Money"))
+					interactWithVisibleMeshParts2(safeFolder:FindFirstChild("Money"))
+					if autoSellToggle == true then
+						local plr = game.Players.LocalPlayer
+						local car = Workspace.Vehicles[plr.Name]
+						local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+						tweenTo(currentPos)
+						tweenTo(pos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						task.wait(.5)
+						local args = {
+							[1] = "Gold",
+							[2] = "Dealer"
+						}
+						sellRemoteEvent:FireServer(unpack(args))
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+						tweenTo(basePos)
+					end
+				end
+
+				local plr = game.Players.LocalPlayer
+				local car = Workspace.Vehicles[plr.Name]
+				local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+				tweenTo(currentPos)
+				print("Return3")
+			else
+				print("Startet 4")
+				print("pos 1")
+				local plr = game.Players.LocalPlayer
+				local car = Workspace.Vehicles[plr.Name]
+				local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+				tweenTo(currentPos)
+				print("pos 2")
+				tweenTo(safePos)
+				print("pos 3")
+				print("pos 4")
+				game.StarterGui:SetCore("SendNotification", {
+					Title = "Bank is not open",
+					Text = "Leave the game or wait until its cooldown reset",
+				})
+				print("Return4")
+			end
+			print("Startet 5")
+			
+			local hasBomb = false
+
+			for _, descendant in ipairs(plrGui:GetDescendants()) do
+				if descendant:IsA("Tool") and descendant.Name == "Bomb" then
+					hasBomb = true; print("has bomb")
+				end
+			end
+
+			if not hasBomb then
+				local plr = game.Players.LocalPlayer
+				local car = Workspace.Vehicles[plr.Name]
+				local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+				tweenTo(currentPos)
+				tweenTo(pos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				task.wait(.5)
+				local args = {
+					[1] = "Bomb",
+					[2] = "Dealer"
+				}
+
+				buyRemoteEvent:FireServer(unpack(args))
+				buyRemoteEvent:FireServer(unpack(args))
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				tweenTo(basePos)
+				print("kauft bomben")
+				local currentPos = car.Body.Mass.Position + Vector3.new(0,200,0)
+				tweenTo(currentPos)
+			end
+			local car = Workspace.Vehicles[plr.Name]
+			car.PrimaryPart = car:FindFirstChild("DriveSeat",true)
+			
+			tweenTo(Vector3.new(1096.401, 57.31, 2226.765), Vector3.new(1096.401, 57.31, 2241.98))
+			
+			local containerFolder = workspace.Robberies.ContainerRobberies
+			local containers = {}
+			for _, model in ipairs(containerFolder:GetChildren()) do
+				if model.Name == "ContainerRobbery" then
+					table.insert(containers, model)
+				end
+			end
+			local container1 = containers[1]
+			local container2 = containers[2]
+			local con1Planks = container1:FindFirstChild("WoodPlanks" ,true)
+			local con2Planks = container2:FindFirstChild("WoodPlanks" ,true)
+			
+			local function isPoliceNearby()
+				local policeTeam = game:GetService("Teams"):FindFirstChild("Police")
+				for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
+					if plr.Team == policeTeam and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+						local distance = (plr.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+						if distance <= 40 then
+							return true
+						end
+					end
+				end
+				return false
+			end
+			
+			if con1Planks.Transparency == 1 then
+				tweenTo(con1Planks.Position)
+				if not isPoliceNearby() then
+					tweenTo(con1Planks.Position)
+					task.wait(0.5)
+					plr.Character.Humanoid.Sit = false
+					plrTween(con1Planks.Position)
+					task.wait(0.5)
+					local args = {
+						[1] = "Bomb"
+					}
+
+					EquipRemoteEvent:FireServer(unpack(args))
+					task.wait(0.5)
+
+					local tool = plr.Character:FindFirstChild("Bomb")
+					if tool then
+						local args = { tool }
+						placeBombRemoteEvent:FireServer(unpack(args))
+					else
+						warn("Tool 'Bomb' not found in the Backpack!")
+					end
+
+					fireBombRemoteEvent:FireServer()
+					tweenTo(Vector3.new(1096.401, 57.31, 2226.765), Vector3.new(1096.401, 57.31, 2241.98))
+					car.PrimaryPart = car:FindFirstChild("DriveSeat",true)
+					task.wait(2)
+					tweenTo(con1Planks.Position)
+					plr.Character.Humanoid.Sit = false
+					plrTween(con1Planks.Position)
+					interactWithVisibleMeshParts2(container1:FindFirstChild("Items"))
+					interactWithVisibleMeshParts2(container1:FindFirstChild("Items"))
+					interactWithVisibleMeshParts2(container1:FindFirstChild("Money"))
+					interactWithVisibleMeshParts2(container1:FindFirstChild("Money"))
+					tweenTo(Vector3.new(1096.401, 57.31, 2226.765), Vector3.new(1096.401, 57.31, 2241.98))
+				end
+			else
+				game.StarterGui:SetCore("SendNotification", {
+					Title = "Container1 not open",
+					Text = "Leave the game or wait until its cooldown reset",
+				})
+			end
+			if con2Planks.Transparency == 1 then
+				if not isPoliceNearby() then
+					tweenTo(con2Planks.Position)
+					task.wait(0.5)
+					plr.Character.Humanoid.Sit = false
+					plrTween(con2Planks.Position)
+					task.wait(0.5)
+					local args = {
+						[1] = "Bomb"
+					}
+
+					EquipRemoteEvent:FireServer(unpack(args))
+					task.wait(0.5)
+
+					local tool = plr.Character:FindFirstChild("Bomb")
+					if tool then
+						local args = { tool }
+						placeBombRemoteEvent:FireServer(unpack(args))
+					else
+						warn("Tool 'Bomb' not found in the Backpack!")
+					end
+
+					fireBombRemoteEvent:FireServer()
+					tweenTo(Vector3.new(1096.401, 57.31, 2226.765), Vector3.new(1096.401, 57.31, 2241.98))
+					task.wait(2)
+					tweenTo(con2Planks.Position)
+					plr.Character.Humanoid.Sit = false
+					plrTween(con2Planks.Position)
+					interactWithVisibleMeshParts2(container2:FindFirstChild("Items"))
+					interactWithVisibleMeshParts2(container2:FindFirstChild("Items"))
+					interactWithVisibleMeshParts2(container2:FindFirstChild("Money"))
+					interactWithVisibleMeshParts2(container2:FindFirstChild("Money"))
+					tweenTo(Vector3.new(1096.401, 57.31, 2226.765), Vector3.new(1096.401, 57.31, 2241.98))
+				end
+			else
+				game.StarterGui:SetCore("SendNotification", {
+					Title = "Container2 not open",
+					Text = "Leave the game or wait until its cooldown reset",
+				})
+			end
+			tweenTo((part2.Position + Vector3.new(0,10,0)))
+			print("Return5")
+			Teleport()
+			game.StarterGui:SetCore("SendNotification", {
+				Title = "Rob loop now done",
+				Text = "Join new server or let it repeat",
+			})
+		end
+
+		local function monitorPlayerDeath()
+			local humanoid = character:WaitForChild("Humanoid")
+			if humanoid.Health <= 30 then
+				local plr = game.Players.LocalPlayer
+				plr.Character.Humanoid.Jump = true
+				task.wait()
+				pcall(function()
+					plr.Character:BreakJoints()
+				end)
+				pcall(function()
+					plr.Character.Humanoid:BreakJoints()
+				end)
+				plr.Character.Humanoid.Health = 0
+				print("The player is dead. Reset...")
+				game.StarterGui:SetCore("SendNotification", {
+					Title = "Player is dead",
+					Text = "Reset",
+				})
+				task.wait(5)
+				updateCamera()
+				tweenTo(part.Position)
+				tweenToDealer()
+			end
+		end
+
+		
+
+
+		camera.CameraType = Enum.CameraType.Scriptable
+		game:GetService("RunService").RenderStepped:Connect(updateCamera)
+
+		monitorPlayerDeath()
+		resetCameraOnDeath()
+		while task.wait() do
+			print("Loop")
+			if autorobToggle == true then
+				tweenToDealer()
+				monitorPlayerDeath()
+				task.wait(10)	
+			end
+		end
+	end
+
+	setup()
+
+	end
